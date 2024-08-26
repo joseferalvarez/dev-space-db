@@ -1,0 +1,25 @@
+---
+services:
+  mariadb:
+    image: mariadb
+    container_name: ds-mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./db.sql:/docker-entrypoint-initdb.d/1.sql"
+
+  #Dev container
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: ds-phpmyadmin
+    restart: always
+    ports:
+      - 8082:80
+    environment:
+      - PMA_ARBITRARY=1
