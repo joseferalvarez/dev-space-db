@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 source .env
-docker exec mariadb sh -c "mariadb -u root -p${MARIADB_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/1.sql"
+docker exec ds-mariadb sh -c "mariadb -u root -p${MARIADB_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/1.sql"
