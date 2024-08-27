@@ -8,13 +8,14 @@ CREATE TABLE IF NOT EXISTS profiles (
   slug varchar(100),
   fullname varchar(100),
   position varchar(150),
-  description varchar(2000),
+  profile_details varchar(4000),
   social_media varchar(50),
   photo varchar(200),
   cv varchar(200),
   preferred_technologies varchar(50),
   skills varchar(50),
-  phone varchar(9),
+  phone_code varchar(10),
+  phone varchar(20),
   email varchar(100),
   language varchar(2),
 );
@@ -31,9 +32,9 @@ CREATE TABLE IF NOT EXISTS experiences (
   experience_type ENUM('study', 'job'),
   date_started DATE,
   date_ended DATE,
-  location varchar(100),
+  experience_location varchar(100),
   job_type ENUM('onsite', 'remote', 'hybrid'),
-  description varchar(2000)
+  experience_details varchar(4000)
   technologies varchar(50),
   projects varchar(50),
   categories varchar(50),
@@ -46,7 +47,7 @@ CREATE TABLE IF NOT EXISTS projects (
   user_id FOREIGN KEY REFERENCES profiles(id),
   project_name varchar(200),
   slug varchar(200),
-  description varchar(200),
+  project_details varchar(4000),
   technologies varchar(50),
   categories varchar(50),
   web_url varchar(200),
@@ -59,7 +60,7 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS codesnippets(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
   codesnippet_id smallint NOT NULL AUTO_INCREMENT,
-  description varchar(2000),
+  code_details varchar(4000),
   code varchar(4000) NOT NULL,
   date_created DATE NOT NULL,
   project_id FOREIGN KEY REFERENCES projects(id),
@@ -73,14 +74,15 @@ CREATE TABLE IF NOT EXISTS social (
   social_name varchar(100),
   slug varchar(100),
   link varchar(200),
-  icon_url varchar(200)
+  icon varchar(200)
 );
 
 CREATE TABLE IF NOT EXISTS technologies (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   technology_name varchar(100),
   slug varchar(100),
-  icon_url varchar(200)
+  link varchar(200),
+  icon varchar(200)
 );
 
 CREATE TABLE IF NOT EXISTS categories (
@@ -106,7 +108,7 @@ CREATE TABLE IF NOT EXISTS contacts (
   phone varchar(20),
   email varchar(100),
   company varchar(100),
-  message varchar(4000),
+  contact_message varchar(4000),
   date_sended DATE
 );
 
