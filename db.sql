@@ -11,27 +11,35 @@ CREATE TABLE IF NOT EXISTS languages (
 
 -- CATEGORIES
 CREATE TABLE IF NOT EXISTS category_types (
-  id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id int PRIMARY KEY NOT NULL AUTO_INCREMENT
 );
 
 CREATE TABLE IF NOT EXISTS category_types_translations (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  category_type FOREIGN KEY REFERENCES category_types(id),
+  category_type int NOT NULL,
   category_name varchar(400) NOT NULL,
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (category_type) REFERENCES category_types(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS categories (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  category_type FOREIGN KEY REFERENCES category_types(id)
+  category_type int NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (category_type) REFERENCES category_types(id)
 );
 
 CREATE TABLE IF NOT EXISTS category_translations (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  category_id FOREIGN KEY REFERENCES categories(id),
+  category_id int NOT NULL,
   category_name varchar(400) NOT NULL,
   slug varchar(400),
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 -- SOCIAL
@@ -58,71 +66,101 @@ CREATE TABLE IF NOT EXISTS profiles (
   username varchar(50),
   slug varchar(100),
   fullname varchar(100),
-  social_media varchar(50),
   photo varchar(200),
   phone_code varchar(10),
   phone varchar(20),
-  email varchar(100),
+  email varchar(100)
 );
 
 CREATE TABLE IF NOT EXISTS profile_translations (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  profile_id FOREIGN KEY REFERENCES profiles(id),
+  profile_id smallint NOT NULL,
   position varchar(150),
   profile_details varchar(4000),
   cv varchar(200),
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS profile_categories(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  profile_id FOREIGN KEY REFERENCES profiles(id),
-  category_id FOREIGN KEY REFERENCES categories(id),
-  language FOREIGN KEY REFERENCES languages(id)
+  profile_id smallint NOT NULL,
+  category_id int NOT NULL,
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id),
+  CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS profile_technologies(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  profile_id FOREIGN KEY REFERENCES profiles(id),
-  technology_id FOREIGN KEY REFERENCES technologies(id)
+  profile_id smallint NOT NULL,
+  technology_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id),
+  CONSTRAINT FOREIGN KEY (technology_id) REFERENCES technologies(id)
+);
+
+CREATE TABLE IF NOT EXISTS profile_social(
+  id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  profile_id smallint NOT NULL,
+  social_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id),
+  CONSTRAINT FOREIGN KEY (social_id) REFERENCES social(id)
 );
 
 -- PROJECTS
 CREATE TABLE IF NOT EXISTS projects (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  user_id FOREIGN KEY REFERENCES profiles(id),
+  profile_id smallint NOT NULL,
   web_url varchar(200),
   github_url varchar(400),
   github_api_url varchar(400),
   photo_url varchar(200),
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
 CREATE TABLE IF NOT EXISTS project_translations (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  project_id FOREIGN KEY REFERENCES projects(id),
+  project_id smallint NOT NULL,
   project_name varchar(200),
   slug varchar(200),
   project_details varchar(4000),
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (project_id) REFERENCES projects(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS project_categories(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  project_id FOREIGN KEY REFERENCES projects(id),
-  category_id FOREIGN KEY REFERENCES categories(id),
-  language FOREIGN KEY REFERENCES languages(id)
+  project_id smallint NOT NULL,
+  category_id int NOT NULL,
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (project_id) REFERENCES projects(id),
+  CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS project_technologies (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  project_id FOREIGN KEY REFERENCES projects(id),
-  technology_id FOREIGN KEY REFERENCES technologies(id)
+  project_id smallint NOT NULL,
+  technology_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (project_id) REFERENCES projects(id),
+  CONSTRAINT FOREIGN KEY (technology_id) REFERENCES technologies(id)
 );
 
 -- EXPERIENCES
 CREATE TABLE IF NOT EXISTS experiences (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  user_id FOREIGN KEY REFERENCES profiles(id),
+  profile_id smallint NOT NULL,
   center varchar(100),
   center_url varchar(200),
   center_icon varchar(200),
@@ -131,63 +169,89 @@ CREATE TABLE IF NOT EXISTS experiences (
   date_ended DATE,
   experience_location varchar(100),
   job_type ENUM('onsite', 'remote', 'hybrid'),
+
+  CONSTRAINT FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
 CREATE TABLE IF NOT EXISTS experience_translations (
   id smallint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  experience_id FOREIGN KEY REFERENCES experiences(id),
+  experience_id smallint NOT NULL,
   experience_name varchar(200),
   slug varchar(200),
   experience_details varchar(4000),
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (experience_id) REFERENCES experiences(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS experience_categories(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  experience_id FOREIGN KEY REFERENCES experiences(id),
-  category_id FOREIGN KEY REFERENCES categories(id),
-  language FOREIGN KEY REFERENCES languages(id)
+  experience_id smallint NOT NULL,
+  category_id int NOT NULL,
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (experience_id) REFERENCES experiences(id),
+  CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS experience_technologies (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  experience_id FOREIGN KEY REFERENCES experiences(id),
-  technology_id FOREIGN KEY REFERENCES technologies(id),
+  experience_id smallint NOT NULL,
+  technology_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (experience_id) REFERENCES experiences(id),
+  CONSTRAINT FOREIGN KEY (technology_id) REFERENCES technologies(id)
 );
 
 CREATE TABLE IF NOT EXISTS experience_projects (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  experience_id FOREIGN KEY REFERENCES experiences(id),
-  project_id FOREIGN KEY REFERENCES projects(id),
+  experience_id smallint NOT NULL,
+  project_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (experience_id) REFERENCES experiences(id),
+  CONSTRAINT FOREIGN KEY (project_id) REFERENCES projects(id)
 );
 
 -- CODESNIPPETS
 CREATE TABLE IF NOT EXISTS codesnippets(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  codesnippet_id smallint NOT NULL AUTO_INCREMENT,
   code varchar(4000) NOT NULL,
   date_created DATE NOT NULL,
-  project_id FOREIGN KEY REFERENCES projects(id)
+  project_id smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (project_id) REFERENCES projects(id)
 );
 
 CREATE TABLE IF NOT EXISTS codesnippet_translations(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  codesnippet_id FOREIGN KEY REFERENCES codesnippets(id),
+  codesnippet_id int NOT NULL,
   code_details varchar(4000),
-  language FOREIGN KEY REFERENCES languages(id)
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (codesnippet_id) REFERENCES codesnippets(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS codesnippet_categories(
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  codesnippet_id FOREIGN KEY REFERENCES codesnippets(id),
-  category_id FOREIGN KEY REFERENCES categories(id),
-  language FOREIGN KEY REFERENCES languages(id)
+  codesnippet_id int NOT NULL,
+  category_id int NOT NULL,
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (codesnippet_id) REFERENCES codesnippets(id),
+  CONSTRAINT FOREIGN KEY (category_id) REFERENCES categories(id),
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
 );
 
 CREATE TABLE IF NOT EXISTS codesnippet_technologies (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  codesnippet_id FOREIGN KEY REFERENCES codesnippets(id),
-  technology_id FOREIGN KEY REFERENCES technologies(id),
+  codesnippet_id int NOT NULL,
+  technology_id smallint NOT NULL,
+  
+  CONSTRAINT FOREIGN KEY (codesnippet_id) REFERENCES codesnippets(id),
+  CONSTRAINT FOREIGN KEY (technology_id) REFERENCES technologies(id)
 );
 
 -- CONTACTS
@@ -203,10 +267,11 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 
 -- ARTICLES
-CREATE TABLE IF NOT EXISTS articles (
+/*CREATE TABLE IF NOT EXISTS articles (
   id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  article_id int NOT NULL AUTO_INCREMENT,
   title varchar(400) NOT NULL,
   notion_api varchar(500),
-  language FOREIGN KEY REFERENCES languages(id)
-);
+  language smallint NOT NULL,
+
+  CONSTRAINT FOREIGN KEY (language) REFERENCES languages(id)
+);*/
